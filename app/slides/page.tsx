@@ -33,10 +33,10 @@ function TaskBar({ label, offset = 0 }: { label: string; offset?: number }) {
 
 const slides = [
   <Slide key="title" className="gap-6">
-    <h1 className="font-heading text-7xl font-semibold tracking-tight lg:text-8xl">
-      <span className="bg-accent px-3 text-accent-foreground">Worktrees</span>
+    <h1 className="font-heading text-8xl font-semibold tracking-wide uppercase lg:text-9xl">
+      <span className="text-accent">Work</span>trees
     </h1>
-    <p className="max-w-2xl text-2xl text-muted-foreground">
+    <p className="max-w-2xl font-serif text-4xl text-muted-foreground italic">
       One repo, many worktrees, and Claude dispatching work from the root.
     </p>
   </Slide>,
@@ -71,7 +71,7 @@ const slides = [
         </div>
       </div>
     </div>
-    <p className="max-w-3xl text-2xl text-muted-foreground">
+    <p className="max-w-3xl font-serif text-3xl text-muted-foreground italic">
       We need a way for agents to work on multiple tasks in parallel, to eliminate the waiting time we have as
       developers.
     </p>
@@ -81,7 +81,7 @@ const slides = [
     <ol className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
       {agenda.map(({ title, description }, i) => (
         <li key={title} className="flex gap-5 border-t pt-4">
-          <span className="font-mono text-sm text-muted-foreground tabular-nums">0{i + 1}</span>
+          <span className="font-mono text-sm text-accent tabular-nums">0{i + 1}</span>
           <div className="space-y-1">
             <p className="text-xl font-medium">{title}</p>
             <p className="text-muted-foreground">{description}</p>
