@@ -1,23 +1,27 @@
 import Link from "next/link"
 import { ArrowRightIcon, PresentationIcon, WrenchIcon } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { showSlides } from "@/flags"
 
-const cards = [
-  {
-    href: "/slides",
-    icon: PresentationIcon,
-    title: "Slides",
-    description: "Go through the presentation.",
-  },
-  {
-    href: "/setup",
-    icon: WrenchIcon,
-    title: "Set it up",
-    description: "Step by step: a bare root, the orchestration file, and your first worktrees.",
-  },
-]
+export default async function Home() {
+  const cards = [
+    {
+      href: "/slides",
+      icon: PresentationIcon,
+      title: "Slides",
+      description: "Go through the presentation.",
+      enabled: await showSlides(),
+    },
+    {
+      href: "/setup",
+      icon: WrenchIcon,
+      title: "Set it up",
+      description: "Step by step: a bare root, the orchestration file, and your first worktrees.",
+      enabled: true,
+    },
+  ]
 
-export default function Home() {
   return (
     <main className="mx-auto flex min-h-svh max-w-3xl flex-col justify-center gap-10 px-6 py-16">
       <div className="space-y-3">
@@ -28,22 +32,36 @@ export default function Home() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {cards.map(({ href, icon: Icon, title, description }) => (
-          <Link key={href} href={href} className="group rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
-            <Card className="h-full transition-shadow group-hover:shadow-md">
+        {cards.map(({ href, icon: Icon, title, description, enabled }) => {
+          const card = (
+            <Card className={enabled ? "h-full transition-shadow group-hover:shadow-md" : "h-full opacity-60"}>
               <CardHeader className="gap-3">
                 <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
                   <Icon className="size-5" />
                 </div>
                 <CardTitle className="flex items-center gap-1.5 text-lg">
                   {title}
-                  <ArrowRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                  {enabled ? (
+                    <ArrowRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                  ) : (
+                    <Badge variant="secondary">Coming soon</Badge>
+                  )}
                 </CardTitle>
                 <CardDescription>{description}</CardDescription>
               </CardHeader>
             </Card>
-          </Link>
-        ))}
+          )
+
+          return enabled ? (
+            <Link key={href} href={href} className="group rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+              {card}
+            </Link>
+          ) : (
+            <div key={href} aria-disabled>
+              {card}
+            </div>
+          )
+        })}
       </div>
     </main>
   )
