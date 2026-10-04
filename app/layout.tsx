@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Barlow_Condensed, Crimson_Pro, Geist } from "next/font/google";
+import { Barlow_Condensed, Source_Serif_4 } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-// Stand-in for IMPACT's Flama Condensed, which is licensed and not on Google Fonts.
-const condensed = Barlow_Condensed({ subsets: ["latin"], weight: ["500", "600"], variable: "--font-condensed" });
-// Stand-in for IMPACT's Plantin, used for intros and leads, like the italic copy on impactcommerce.com.
-const serif = Crimson_Pro({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-serif" });
+// Stand-ins for IMPACT's licensed fonts, for wherever the real ones aren't installed (see globals.css).
+// Barlow Condensed is close to Flama Condensed Medium in width and weight, and Source Serif to Plantin.
+const flama = Barlow_Condensed({ subsets: ["latin"], weight: "600", variable: "--font-flama" });
+const plantin = Source_Serif_4({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
+  variable: "--font-plantin",
+});
 
 export const metadata: Metadata = {
   title: "Worktrees",
@@ -16,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable, condensed.variable, serif.variable)}>
+    <html lang="en" className={cn("font-serif", flama.variable, plantin.variable)}>
       <body>{children}</body>
     </html>
   );

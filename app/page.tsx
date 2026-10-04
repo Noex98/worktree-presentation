@@ -1,75 +1,87 @@
 import Link from "next/link"
-import { ArrowRightIcon, PresentationIcon, WrenchIcon } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { ArrowRightIcon } from "@phosphor-icons/react/ssr"
+import { Highlight } from "@/components/highlight"
+import { ImpactLogo } from "@/components/impact-logo"
 import { showSlides } from "@/flags"
+import { cn } from "@/lib/utils"
 
 export default async function Home() {
-  const cards = [
+  const links = [
     {
       href: "/slides",
-      icon: PresentationIcon,
       title: "Slides",
       description: "Go through the presentation.",
       enabled: await showSlides(),
     },
     {
       href: "/setup",
-      icon: WrenchIcon,
       title: "Set it up",
       description: "With a user-scoped skill or by hand, plus an FAQ for the snags.",
       enabled: true,
     },
   ]
 
+  const row = "grid grid-cols-[2.5rem_1fr_auto] items-center gap-x-4 px-4 py-7 sm:grid-cols-[3.5rem_1fr_auto]"
+  const number = "self-start pt-1 font-heading text-xl tabular-nums"
+
   return (
-    <main className="mx-auto flex min-h-svh max-w-3xl flex-col justify-center gap-12 px-6 py-16">
-      <div className="space-y-5">
-        <h1 className="font-heading text-6xl font-semibold tracking-wide uppercase sm:text-7xl">
-          <span className="bg-accent px-1.5">Work</span>trees
-        </h1>
-        <p className="max-w-xl font-serif text-2xl text-muted-foreground italic">
+    <main className="grid min-h-svh lg:grid-cols-[5fr_7fr]">
+      {/* Laid out like the template's agenda slide: a black panel, the one place the yellow can go. */}
+      <section className="dark flex min-h-[55svh] flex-col justify-between gap-16 bg-background p-6 text-foreground sm:p-10 lg:min-h-svh">
+        <ImpactLogo className="w-24" />
+        <div className="@container">
+          <h1 className="font-heading text-[22cqw] leading-[0.85] uppercase">
+            <Highlight>Work</Highlight>trees
+          </h1>
+        </div>
+      </section>
+
+      <div className="flex flex-col justify-center gap-14 px-6 py-16 sm:px-10 lg:px-16">
+        <p className="max-w-xl text-2xl leading-snug italic sm:text-3xl">
           One repo, many worktrees, and Claude dispatching work from the root.
         </p>
-      </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {cards.map(({ href, icon: Icon, title, description, enabled }) => {
-          const card = (
-            <Card
-              className={
-                enabled
-                  ? "h-full border-l-4 border-l-foreground transition-colors group-hover:bg-muted"
-                  : "h-full opacity-60"
-              }
-            >
-              <CardHeader className="gap-3">
-                <div className="flex size-10 items-center justify-center rounded-lg bg-primary text-accent">
-                  <Icon className="size-5" />
-                </div>
-                <CardTitle className="flex items-center gap-1.5 text-xl tracking-wide uppercase">
-                  {title}
-                  {enabled ? (
-                    <ArrowRightIcon className="size-4 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-                  ) : (
-                    <Badge variant="secondary">Coming soon</Badge>
-                  )}
-                </CardTitle>
-                <CardDescription>{description}</CardDescription>
-              </CardHeader>
-            </Card>
-          )
+        <ol className="-mx-4 max-w-2xl border-t">
+          {links.map(({ href, title, description, enabled }, i) => {
+            const text = (
+              <span className="space-y-2">
+                <span className="block font-heading text-4xl leading-none uppercase sm:text-5xl">{title}</span>
+                <span className="block text-lg">{description}</span>
+              </span>
+            )
 
-          return enabled ? (
-            <Link key={href} href={href} className="group rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
-              {card}
-            </Link>
-          ) : (
-            <div key={href} aria-disabled>
-              {card}
-            </div>
-          )
-        })}
+            return (
+              <li key={href} className="border-b">
+                {enabled ? (
+                  <Link
+                    href={href}
+                    className={cn(
+                      row,
+                      "group outline-none transition-colors hover:bg-foreground hover:text-background focus-visible:bg-foreground focus-visible:text-background",
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        number,
+                        "text-muted-foreground transition-colors group-hover:text-impact-yellow group-focus-visible:text-impact-yellow",
+                      )}
+                    >
+                      0{i + 1}
+                    </span>
+                    {text}
+                    <ArrowRightIcon className="size-8 transition group-hover:translate-x-1 group-hover:text-impact-yellow group-focus-visible:text-impact-yellow" />
+                  </Link>
+                ) : (
+                  <div aria-disabled className={cn(row, "text-muted-foreground")}>
+                    <span className={number}>0{i + 1}</span>
+                    {text}
+                    <span className="font-heading text-sm tracking-wide uppercase">Coming soon</span>
+                  </div>
+                )}
+              </li>
+            )
+          })}
+        </ol>
       </div>
     </main>
   )

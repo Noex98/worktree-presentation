@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { CheckIcon, CopyIcon } from "lucide-react"
+import { CheckIcon, CopyIcon } from "@phosphor-icons/react/ssr"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
@@ -15,13 +15,13 @@ export function CodeBlock({ code, className }: { code: string; className?: strin
   }
 
   return (
-    <div className={cn("group relative rounded-lg border bg-muted/50", className)}>
+    <div className={cn("group relative bg-muted", className)}>
       <Button
         variant="ghost"
         size="icon-sm"
         onClick={copy}
         aria-label="Copy"
-        className="absolute top-2 right-2 bg-background/80 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+        className="absolute top-2 right-2 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-background focus-visible:opacity-100"
       >
         {copied ? <CheckIcon /> : <CopyIcon />}
       </Button>

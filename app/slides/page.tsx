@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation"
+import { Highlight } from "@/components/highlight"
 import { Deck } from "@/components/slides/deck"
-import { Slide } from "@/components/slides/slide"
+import { Slide, TitleSlide } from "@/components/slides/slide"
 import { showSlides } from "@/flags"
 
 // Written from SLIDES.md — keep the two in line.
@@ -20,10 +21,14 @@ const agenda = [
   { title: "The bare root", description: "A space above the worktrees where we start Claude and let it orchestrate" },
 ]
 
+function Label({ children }: { children: React.ReactNode }) {
+  return <p className="font-heading text-[1.25cqw] tracking-wide text-muted-foreground uppercase">{children}</p>
+}
+
 function TaskBar({ label, offset = 0 }: { label: string; offset?: number }) {
   return (
     <div
-      className="flex h-10 w-[30%] items-center rounded-md bg-foreground px-3 text-sm font-medium text-background"
+      className="flex h-[3.2cqw] w-[30%] items-center bg-foreground px-[1cqw] font-heading text-[1.25cqw] text-background uppercase"
       style={{ marginLeft: `${offset}%` }}
     >
       {label}
@@ -32,59 +37,70 @@ function TaskBar({ label, offset = 0 }: { label: string; offset?: number }) {
 }
 
 const slides = [
-  <Slide key="title" className="gap-6">
-    <h1 className="font-heading text-8xl font-semibold tracking-wide uppercase lg:text-9xl">
-      <span className="bg-accent px-2">Work</span>trees
-    </h1>
-    <p className="max-w-2xl font-serif text-4xl text-muted-foreground italic">
-      One repo, many worktrees, and Claude dispatching work from the root.
-    </p>
-  </Slide>,
+  <TitleSlide
+    key="title"
+    title={
+      <>
+        <Highlight>Work</Highlight>trees
+      </>
+    }
+    subtitle="One repo, many worktrees, and Claude dispatching work from the root."
+  />,
 
-  <Slide key="about" eyebrow="About me" title="Johannes">
-    <dl className="grid gap-8 sm:grid-cols-3">
+  <Slide key="about" eyebrow="About me" title="Johannes" className="justify-end">
+    <dl className="grid grid-cols-3 gap-[3cqw]">
       {about.map(({ label, value }) => (
-        <div key={label} className="space-y-2 border-t pt-4">
-          <dt className="text-sm text-muted-foreground">{label}</dt>
-          <dd className="text-2xl font-medium">{value}</dd>
+        <div key={label} className="space-y-[1cqw] border-t border-foreground pt-[1.2cqw]">
+          <dt>
+            <Label>{label}</Label>
+          </dt>
+          <dd className="font-heading text-[2.9cqw] leading-none uppercase">{value}</dd>
         </div>
       ))}
     </dl>
   </Slide>,
 
   <Slide key="why" eyebrow="Why now" title="Agentic work has made worktrees more relevant than ever">
-    <div className="grid gap-10 lg:grid-cols-2">
-      <div className="space-y-3">
-        <p className="text-sm text-muted-foreground">One task at a time</p>
+    <div className="grid grid-cols-2 gap-[5cqw]">
+      <div className="space-y-[1.2cqw]">
+        <Label>One task at a time</Label>
         <div className="flex gap-[5%]">
           {tasks.map((task) => (
             <TaskBar key={task} label={task} />
           ))}
         </div>
       </div>
-      <div className="space-y-3">
-        <p className="text-sm text-muted-foreground">In parallel</p>
-        <div className="space-y-2">
+      <div className="space-y-[1.2cqw]">
+        <Label>In parallel</Label>
+        <div className="space-y-[0.6cqw]">
           {tasks.map((task) => (
             <TaskBar key={task} label={task} />
           ))}
         </div>
       </div>
     </div>
-    <p className="max-w-3xl font-serif text-3xl text-muted-foreground italic">
+    <p className="max-w-[62cqw] text-[2.4cqw] leading-tight italic">
       We need a way for agents to work on multiple tasks in parallel, to eliminate the waiting time we have as
       developers.
     </p>
   </Slide>,
 
-  <Slide key="agenda" eyebrow="Agenda" title="Most of us know worktrees. But there are many ways of working with them.">
-    <ol className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
+  <Slide
+    key="agenda"
+    panel="Agenda"
+    title={
+      <>
+        <Highlight>Most of us know worktrees.</Highlight> But there are many ways of working with them.
+      </>
+    }
+  >
+    <ol>
       {agenda.map(({ title, description }, i) => (
-        <li key={title} className="flex gap-5 border-t pt-4">
-          <span className="font-mono text-sm text-muted-foreground tabular-nums">0{i + 1}</span>
-          <div className="space-y-1">
-            <p className="text-xl font-medium">{title}</p>
-            <p className="text-muted-foreground">{description}</p>
+        <li key={title} className="grid grid-cols-[4cqw_1fr] border-t border-foreground py-[1.3cqw] last:border-b">
+          <span className="font-heading text-[1.7cqw] leading-none text-muted-foreground tabular-nums">0{i + 1}</span>
+          <div className="space-y-[0.5cqw]">
+            <p className="font-heading text-[1.7cqw] leading-none uppercase">{title}</p>
+            <p className="text-[1.45cqw] leading-snug">{description}</p>
           </div>
         </li>
       ))}

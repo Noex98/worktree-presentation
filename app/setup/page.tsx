@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import Link from "next/link"
-import { ArrowRightIcon, DownloadIcon, SparklesIcon, TerminalIcon } from "lucide-react"
+import { ArrowRightIcon, DownloadSimpleIcon, SparkleIcon, TerminalWindowIcon } from "@phosphor-icons/react/ssr"
 import { CodeBlock } from "@/components/code-block"
 import { PageHeader } from "@/components/page-header"
 import { Button } from "@/components/ui/button"
@@ -14,31 +14,31 @@ import { cn } from "@/lib/utils"
 const agentsTemplate = readFileSync(join(process.cwd(), "public", "AGENTS.md"), "utf8")
 
 function Code({ children }: { children: React.ReactNode }) {
-  return <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[0.85em]">{children}</code>
+  return <code className="bg-muted px-1.5 py-0.5 font-mono text-[0.85em] normal-case">{children}</code>
 }
 
-function Step({ number, title, children }: { number: number; title: string; children: React.ReactNode }) {
+function Step({ number, title, children }: { number: number; title: React.ReactNode; children: React.ReactNode }) {
   return (
-    <li className="group relative pb-12 pl-12 last:pb-0">
-      <div className="absolute top-8 bottom-0 left-[15px] w-px bg-border group-last:hidden" />
-      <div className="absolute top-0 left-0 flex size-8 items-center justify-center rounded-full bg-primary text-sm font-medium text-accent">
-        {number}
+    <li className="group relative pb-14 pl-16 last:pb-0">
+      <div className="absolute top-10 bottom-0 left-5 w-px bg-border group-last:hidden" />
+      <div className="dark absolute top-0 left-0 flex size-10 items-center justify-center bg-background font-heading text-xl text-highlight tabular-nums">
+        0{number}
       </div>
-      <h3 className="pt-1 font-heading text-xl font-semibold">{title}</h3>
-      <div className="mt-4 space-y-4 text-muted-foreground [&_pre]:text-foreground">{children}</div>
+      <h3 className="pt-2.5 font-heading text-2xl leading-none uppercase">{title}</h3>
+      <div className="mt-5 space-y-4 text-lg">{children}</div>
     </li>
   )
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="font-heading text-3xl font-semibold tracking-wide uppercase">{children}</h2>
+  return <h2 className="font-heading text-5xl leading-none uppercase">{children}</h2>
 }
 
 function Question({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-4 border-t pt-6">
-      <h3 className="font-heading text-xl font-semibold">{title}</h3>
-      <div className="space-y-4 text-muted-foreground [&_pre]:text-foreground">{children}</div>
+    <div className="space-y-5 border-t pt-8">
+      <h3 className="font-heading text-2xl leading-tight uppercase">{title}</h3>
+      <div className="space-y-4 text-lg">{children}</div>
     </div>
   )
 }
@@ -46,13 +46,13 @@ function Question({ title, children }: { title: string; children: React.ReactNod
 const paths = [
   {
     id: "skill",
-    icon: SparklesIcon,
+    icon: SparkleIcon,
     title: "With a skill",
     description: "Install a user-scoped skill once, and Claude sets up any repo for you.",
   },
   {
     id: "manual",
-    icon: TerminalIcon,
+    icon: TerminalWindowIcon,
     title: "Manual",
     description: "Run every command yourself, one at a time.",
   },
@@ -72,24 +72,17 @@ function PathPicker({ selected }: { selected: PathId }) {
             scroll={false}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "group flex gap-4 rounded-lg border p-5 outline-none transition-colors focus-visible:ring-3 focus-visible:ring-ring/50",
-              active ? "dark border-transparent bg-background text-foreground" : "hover:border-foreground",
+              "group flex gap-4 border p-5 outline-none transition-colors focus-visible:ring-3 focus-visible:ring-ring/50",
+              active ? "dark border-background bg-background text-foreground" : "hover:border-foreground",
             )}
           >
-            <div
-              className={cn(
-                "flex size-10 shrink-0 items-center justify-center rounded-lg",
-                active ? "bg-accent text-accent-foreground" : "bg-muted",
-              )}
-            >
-              <Icon className="size-5" />
-            </div>
-            <div className="space-y-1">
-              <p className="flex items-center gap-1.5 font-heading text-lg font-semibold tracking-wide uppercase">
+            <Icon className={cn("size-8 shrink-0", active && "text-highlight")} />
+            <div className="space-y-2">
+              <p className="flex items-center gap-2 pt-1 font-heading text-2xl leading-none uppercase">
                 {title}
-                {!active && <ArrowRightIcon className="size-4 transition-transform group-hover:translate-x-0.5" />}
+                {!active && <ArrowRightIcon className="size-5 transition-transform group-hover:translate-x-1" />}
               </p>
-              <p className="text-sm text-muted-foreground">{description}</p>
+              <p>{description}</p>
             </div>
           </Link>
         )
@@ -118,7 +111,7 @@ function SkillSteps() {
               <CardDescription>{description}</CardDescription>
               <CardAction>
                 <Button variant="outline" size="sm" nativeButton={false} render={<a href={href} download />}>
-                  <DownloadIcon data-icon="inline-start" />
+                  <DownloadSimpleIcon data-icon="inline-start" />
                   Download
                 </Button>
               </CardAction>
@@ -160,7 +153,14 @@ function ManualSteps() {
         </div>
       </Step>
 
-      <Step number={2} title="Clone the repo bare into .git">
+      <Step
+        number={2}
+        title={
+          <>
+            Clone the repo bare into <Code>.git</Code>
+          </>
+        }
+      >
         <p>
           Cloning into <Code>.git</Code> keeps the repo&apos;s internals in one hidden folder, instead of spreading
           them across the project folder the way a plain <Code>git clone --bare</Code> does.
@@ -190,13 +190,13 @@ function ManualSteps() {
             <CardDescription>The dispatcher instructions for the bare root.</CardDescription>
             <CardAction>
               <Button variant="outline" size="sm" nativeButton={false} render={<a href="/AGENTS.md" download />}>
-                <DownloadIcon data-icon="inline-start" />
+                <DownloadSimpleIcon data-icon="inline-start" />
                 Download
               </Button>
             </CardAction>
           </CardHeader>
           <CardContent>
-            <ScrollArea className="h-80 rounded-lg border bg-muted/50">
+            <ScrollArea className="h-80 bg-muted">
               <pre className="overflow-x-auto p-4 font-mono text-[13px] leading-relaxed text-foreground">
                 {agentsTemplate}
               </pre>
@@ -226,7 +226,7 @@ function ManualSteps() {
 
 function Faq() {
   return (
-    <section className="space-y-6">
+    <section className="space-y-8">
       <SectionTitle>FAQ</SectionTitle>
 
       <Question title={'Git fails with "Filename too long" on Windows'}>
@@ -252,7 +252,7 @@ function Faq() {
           <Code>git rev-parse --local-env-vars</Code> prints git&apos;s own list of these variables. The{" "}
           <a
             href="https://git-scm.com/docs/githooks"
-            className="text-foreground underline underline-offset-4"
+            className="underline underline-offset-4 hover:decoration-2"
             target="_blank"
             rel="noreferrer"
           >
@@ -276,8 +276,8 @@ export default async function Setup({ searchParams }: { searchParams: Promise<{ 
         description="One folder that holds the repo and all its worktrees, with Claude working from the root as a dispatcher."
       />
 
-      <main className="mx-auto max-w-3xl space-y-16 px-6 py-12">
-        <section className="space-y-10">
+      <main className="mx-auto max-w-3xl space-y-20 px-6 pt-12 pb-24">
+        <section className="space-y-12">
           <PathPicker selected={selected} />
           {selected === "skill" ? <SkillSteps /> : <ManualSteps />}
         </section>
