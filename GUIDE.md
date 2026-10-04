@@ -3,10 +3,56 @@
 Set up a project as a bare root: one folder that holds the repo and all its worktrees, with Claude
 working from the root as a dispatcher.
 
+# With the skill
+
+Install a skill once, and Claude sets up any repo as a bare root for you.
+
+## 1. Install the skill
+
+Download both files into `~/.claude/skills/bare-root/`. That installs the skill for your user, so it
+works in every folder.
+
+- [`SKILL.md`](/skills/bare-root/SKILL.md): the setup steps Claude follows
+- [`AGENTS.md`](/AGENTS.md): the orchestration file it copies into the root
+
+## 2. Run it
+
+Start Claude in the folder where you keep your code, and run the skill with the repo:
+
+```sh
+claude
+```
+
+```
+/bare-root <repo-url>
+```
+
+It asks which branches to check out, then clones the repo, adds the worktrees, and fills in
+`AGENTS.md` for you.
+
+## 3. Start dispatching
+
+Start Claude in the new root and give it a task:
+
+```sh
+cd <folder>
+```
+
+```sh
+claude
+```
+
+# By hand
+
+The same setup, one command at a time.
+
 ## 1. Make the project folder
 
 ```sh
 mkdir my-project
+```
+
+```sh
 cd my-project
 ```
 
@@ -23,10 +69,11 @@ A bare clone doesn't set up fetching of remote branches, so add that and fetch:
 
 ```sh
 git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-git fetch origin
 ```
 
-On Windows, also allow long paths: `git config --global core.longpaths true`
+```sh
+git fetch origin
+```
 
 ## 3. Add the orchestration file
 
@@ -48,6 +95,9 @@ production branch, or the latest release branch:
 
 ```sh
 git worktree add -B development --track worktrees/development origin/development
+```
+
+```sh
 git worktree add -B main --track worktrees/main origin/main
 ```
 
@@ -58,3 +108,5 @@ claude
 ```
 
 Give it a task. It creates a worktree, writes a brief, and opens a new session in that worktree.
+
+On Windows, or seeing git hooks act up in a worktree? See the [FAQ](/faq).

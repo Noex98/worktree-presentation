@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRightIcon, PresentationIcon, WrenchIcon } from "lucide-react"
+import { ArrowRightIcon, CircleHelpIcon, PresentationIcon, WrenchIcon } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { showSlides } from "@/flags"
@@ -17,7 +17,14 @@ export default async function Home() {
       href: "/setup",
       icon: WrenchIcon,
       title: "Set it up",
-      description: "Step by step: a bare root, the orchestration file, and your first worktrees.",
+      description: "A bare root, the orchestration file, and your first worktrees. With a skill or by hand.",
+      enabled: true,
+    },
+    {
+      href: "/faq",
+      icon: CircleHelpIcon,
+      title: "FAQ",
+      description: "Long paths on Windows, git hooks in worktrees, and other snags.",
       enabled: true,
     },
   ]
@@ -31,12 +38,12 @@ export default async function Home() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-3">
         {cards.map(({ href, icon: Icon, title, description, enabled }) => {
           const card = (
             <Card className={enabled ? "h-full transition-shadow group-hover:shadow-md" : "h-full opacity-60"}>
               <CardHeader className="gap-3">
-                <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
+                <div className="flex size-10 items-center justify-center rounded-lg bg-primary text-accent">
                   <Icon className="size-5" />
                 </div>
                 <CardTitle className="flex items-center gap-1.5 text-lg">

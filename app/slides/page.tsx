@@ -33,7 +33,9 @@ function TaskBar({ label, offset = 0 }: { label: string; offset?: number }) {
 
 const slides = [
   <Slide key="title" className="gap-6">
-    <h1 className="font-heading text-7xl font-semibold tracking-tight lg:text-8xl">Worktrees</h1>
+    <h1 className="font-heading text-7xl font-semibold tracking-tight lg:text-8xl">
+      <span className="bg-accent px-3 text-accent-foreground">Worktrees</span>
+    </h1>
     <p className="max-w-2xl text-2xl text-muted-foreground">
       One repo, many worktrees, and Claude dispatching work from the root.
     </p>

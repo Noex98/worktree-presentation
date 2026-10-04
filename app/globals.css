@@ -6,7 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: var(--font-sans);
+    --font-heading: var(--font-condensed);
     --font-sans: var(--font-sans);
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
@@ -48,25 +48,28 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* IMPACT colours, from impactcommerce.com: charcoal #303030 and yellow #feff00. Yellow is
+   unreadable on white, so it only ever sits behind or on top of charcoal. */
 :root {
+    --brand-yellow: #feff00;
     --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    --foreground: #303030;
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
+    --card-foreground: #303030;
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
+    --popover-foreground: #303030;
+    --primary: #303030;
+    --primary-foreground: oklch(1 0 0);
     --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
+    --secondary-foreground: #303030;
     --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
+    --muted-foreground: oklch(0.52 0 0);
+    --accent: var(--brand-yellow);
+    --accent-foreground: #303030;
     --destructive: oklch(0.577 0.245 27.325);
     --border: oklch(0.922 0 0);
     --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
+    --ring: #303030;
     --chart-1: oklch(0.87 0 0);
     --chart-2: oklch(0.556 0 0);
     --chart-3: oklch(0.439 0 0);
@@ -95,5 +98,9 @@
     }
   html {
     @apply font-sans;
+    }
+  ::selection {
+    background-color: var(--brand-yellow);
+    color: #303030;
     }
 }
