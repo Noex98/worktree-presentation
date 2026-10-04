@@ -39,9 +39,9 @@ export function Deck({ slides }: { slides: React.ReactNode[] }) {
   }, [go, index, last])
 
   return (
-    <main className="dark flex h-svh flex-col overflow-hidden bg-background text-foreground">
+    <main className="flex h-svh flex-col overflow-hidden">
       <div className="h-1 bg-muted">
-        <div className="h-full bg-accent transition-[width] duration-300" style={{ width: `${((index + 1) / slides.length) * 100}%` }} />
+        <div className="h-full bg-foreground transition-[width] duration-300" style={{ width: `${((index + 1) / slides.length) * 100}%` }} />
       </div>
 
       <div key={index} className="flex flex-1 items-center overflow-y-auto py-12 animate-in fade-in duration-300">

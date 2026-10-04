@@ -2,10 +2,9 @@ import Link from "next/link"
 import { ArrowLeftIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-// A charcoal band like the heroes on impactcommerce.com; the page content below stays light.
 export function PageHeader({ title, description }: { title: string; description?: string }) {
   return (
-    <header className="dark bg-background text-foreground">
+    <header className="border-b">
       <div className="mx-auto max-w-3xl space-y-8 px-6 pt-8 pb-14">
         <Button variant="ghost" size="sm" className="-ml-2.5 text-muted-foreground" nativeButton={false} render={<Link href="/" />}>
           <ArrowLeftIcon data-icon="inline-start" />

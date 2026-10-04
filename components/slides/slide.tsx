@@ -15,7 +15,7 @@ export function Slide({
     <section className={cn("mx-auto flex w-full max-w-5xl flex-col gap-12 px-10", className)}>
       {(eyebrow || title) && (
         <header className="space-y-4">
-          {eyebrow && <p className="font-heading text-lg font-semibold tracking-widest text-accent uppercase">{eyebrow}</p>}
+          {eyebrow && <p className="w-fit bg-accent px-2 font-heading text-lg font-semibold tracking-widest uppercase">{eyebrow}</p>}
           {title && (
             <h2 className="font-heading text-5xl font-semibold tracking-wide text-balance uppercase lg:text-6xl">{title}</h2>
           )}

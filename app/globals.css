@@ -2,8 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-/* `dark:` variants and the dark tokens apply under a `.dark` class: the front page, the slides and
-   page headers are charcoal like impactcommerce.com; the guide content stays light for reading. */
+/* The site is light, which reads better on a shared screen. `dark:` variants and the dark tokens
+   only apply under a `.dark` class, used for small charcoal blocks like the selected setup path. */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
