@@ -1,8 +1,10 @@
+import { Fragment } from "react"
 import { notFound } from "next/navigation"
 import { Highlight } from "@/components/highlight"
 import { Deck } from "@/components/slides/deck"
 import { Slide, TitleSlide } from "@/components/slides/slide"
 import { showSlides } from "@/flags"
+import { cn } from "@/lib/utils"
 
 // Written from SLIDES.md — keep the two in line.
 
@@ -12,7 +14,35 @@ const about = [
   { label: "Team", value: "Accelerator" },
 ]
 
-const tasks = ["Task A", "Task B", "Task C"]
+// An hour of work, in minutes. Your time is one thread either way: you start every task and follow up
+// when it's done. With one worktree you wait while the agent works. With many, the agents work side by
+// side, and each gets a bigger task, so following up on them doesn't take all your time.
+type Span = [from: number, to: number, note?: string]
+
+const HOUR = 60
+
+const timeline: { title: string; lanes: { label: string; you?: Span[]; agent?: Span[]; waiting?: Span[] }[] }[] = [
+  {
+    title: "One worktree",
+    lanes: [
+      {
+        label: "You",
+        you: [[0, 3], [15, 18], [30, 33], [45, 48]],
+        waiting: [[3, 15], [18, 30], [33, 45], [48, 60]],
+      },
+      { label: "Agent", agent: [[3, 15], [18, 30], [33, 45], [48, 60]] },
+    ],
+  },
+  {
+    title: "Many worktrees",
+    lanes: [
+      { label: "You", you: [[0, 3], [3, 6], [6, 9], [42, 45], [45, 48], [48, 51]] },
+      { label: "Agent 1", agent: [[3, 42, "bigger task"], [45, 60]] },
+      { label: "Agent 2", agent: [[6, 45, "bigger task"], [48, 60]] },
+      { label: "Agent 3", agent: [[9, 48, "bigger task"], [51, 60]] },
+    ],
+  },
+]
 
 const agenda = [
   { title: "The foundation", description: "Understanding the technology" },
@@ -21,17 +51,62 @@ const agenda = [
   { title: "The bare root", description: "A space above the worktrees where we start Claude and let it orchestrate" },
 ]
 
-function Label({ children }: { children: React.ReactNode }) {
-  return <p className="font-heading text-[1.25cqw] tracking-wide text-muted-foreground uppercase">{children}</p>
+function Label({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <p className={cn("font-heading text-[1.25cqw] tracking-wide text-muted-foreground uppercase", className)}>{children}</p>
+  )
 }
 
-function TaskBar({ label, offset = 0 }: { label: string; offset?: number }) {
+// Swimlanes on a shared time axis: black is you starting or following up on a task, grey is an agent
+// working, and light grey is you waiting.
+function Timeline() {
+  const at = ([from, to]: Span) => ({ left: `${(from / HOUR) * 100}%`, width: `${((to - from) / HOUR) * 100}%` })
+  const block = "absolute inset-y-0 flex items-center justify-center border-x-[0.1cqw] border-background"
+
   return (
-    <div
-      className="flex h-[3.2cqw] w-[30%] items-center bg-foreground px-[1cqw] font-heading text-[1.25cqw] text-background uppercase"
-      style={{ marginLeft: `${offset}%` }}
-    >
-      {label}
+    <div className="grid grid-cols-[7cqw_1fr] items-center gap-x-[1.5cqw] gap-y-[0.5cqw]">
+      {timeline.map(({ title, lanes }, i) => (
+        <Fragment key={title}>
+          <p className={cn("col-span-2 font-heading text-[1.6cqw] leading-none uppercase", i > 0 && "mt-[1.8cqw]")}>
+            {title}
+          </p>
+          {lanes.map(({ label, you = [], agent = [], waiting = [] }) => (
+            <Fragment key={label}>
+              <Label className={you.length > 0 ? "text-foreground" : undefined}>{label}</Label>
+              <div className="relative h-[2cqw]">
+                {agent.map((span) => (
+                  <div key={span[0]} className={cn(block, "bg-(--impact-grey-mid) text-[1.15cqw] italic")} style={at(span)}>
+                    {span[2]}
+                  </div>
+                ))}
+                {you.map((span) => (
+                  <div
+                    key={span[0]}
+                    className={cn(block, "bg-foreground font-heading text-[1.15cqw] text-background")}
+                    style={at(span)}
+                  >
+                    {span[2]}
+                  </div>
+                ))}
+                {waiting.map((span) => (
+                  <div key={span[0]} className={cn(block, "bg-muted text-[1.15cqw] italic")} style={at(span)}>
+                    waiting
+                  </div>
+                ))}
+              </div>
+            </Fragment>
+          ))}
+        </Fragment>
+      ))}
+      <div className="col-start-2 mt-[0.8cqw] flex items-center gap-[0.8cqw]">
+        <div className="flex flex-1 items-center">
+          <div className="h-px flex-1 bg-foreground" />
+          <svg viewBox="0 0 6 10" fill="none" stroke="currentColor" className="-ml-px h-[0.8cqw] w-[0.48cqw]">
+            <path d="M0 0l6 5-6 5" vectorEffect="non-scaling-stroke" />
+          </svg>
+        </div>
+        <Label>Time</Label>
+      </div>
     </div>
   )
 }
@@ -61,24 +136,7 @@ const slides = [
   </Slide>,
 
   <Slide key="why" eyebrow="Why now" title="Agentic work has made worktrees more relevant than ever">
-    <div className="grid grid-cols-2 gap-[5cqw]">
-      <div className="space-y-[1.2cqw]">
-        <Label>One task at a time</Label>
-        <div className="flex gap-[5%]">
-          {tasks.map((task) => (
-            <TaskBar key={task} label={task} />
-          ))}
-        </div>
-      </div>
-      <div className="space-y-[1.2cqw]">
-        <Label>In parallel</Label>
-        <div className="space-y-[0.6cqw]">
-          {tasks.map((task) => (
-            <TaskBar key={task} label={task} />
-          ))}
-        </div>
-      </div>
-    </div>
+    <Timeline />
     <p className="max-w-[62cqw] text-[2.4cqw] leading-tight italic">
       We need a way for agents to work on multiple tasks in parallel, to eliminate the waiting time we have as
       developers.
