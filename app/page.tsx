@@ -30,8 +30,8 @@ export default async function Home() {
       <section className="dark flex min-h-[55svh] flex-col justify-between gap-16 bg-background p-6 text-foreground sm:p-10 lg:min-h-svh">
         <ImpactLogo className="w-24" />
         <div className="@container">
-          <h1 className="font-heading text-[22cqw] leading-[0.85] uppercase">
-            <Highlight>Work</Highlight>trees
+          <h1 className="font-heading text-[13cqw] leading-[0.85] uppercase">
+            Git <Highlight>Worktrees</Highlight> and Agent Orchestration
           </h1>
         </div>
       </section>

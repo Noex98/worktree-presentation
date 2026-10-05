@@ -2,6 +2,7 @@
 
 import { createContext, use, useCallback, useEffect, useState } from "react"
 import { CaretLeftIcon, CaretRightIcon } from "@phosphor-icons/react/ssr"
+import { cn } from "@/lib/utils"
 
 const NEXT_KEYS = ["ArrowRight", "ArrowDown", "PageDown", " "]
 const PREV_KEYS = ["ArrowLeft", "ArrowUp", "PageUp"]
@@ -48,9 +49,13 @@ export function Deck({ slides }: { slides: React.ReactNode[] }) {
       <main className="flex h-svh items-center justify-center overflow-hidden bg-black">
         {/* A 16:9 stage, like the template's slides. Slides size everything in cqw, so they scale with it. */}
         <div className="@container relative aspect-video w-[min(100vw,calc(100svh*16/9))] overflow-hidden">
-          <div key={index} className="absolute inset-0 animate-in fade-in duration-300">
-            {slides[index]}
-          </div>
+          {/* Every slide stays mounted, so each keeps its state, and only the current one is shown: slides
+              change with a plain cut. */}
+          {slides.map((slide, i) => (
+            <div key={i} inert={i !== index} className={cn("absolute inset-0", i !== index && "hidden")}>
+              {slide}
+            </div>
+          ))}
         </div>
       </main>
     </DeckContext>

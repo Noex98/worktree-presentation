@@ -14,7 +14,7 @@ const plantin = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  title: "Worktrees",
+  title: "Git Worktrees and Agent Orchestration",
   description: "Git worktrees, a bare root, and orchestration",
 };
 
