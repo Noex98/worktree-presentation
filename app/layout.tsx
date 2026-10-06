@@ -15,7 +15,9 @@ const plantin = Source_Serif_4({
 
 export const metadata: Metadata = {
   title: "Git Worktrees and Agent Orchestration",
-  description: "Git worktrees, a bare root, and orchestration",
+  description:
+    "A Frontend Meetup talk on git worktrees, bare repos, and orchestrating AI agents from one root. With a setup guide to try it yourself.",
+  openGraph: { siteName: "IMPACT Frontend Meetup", type: "website" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
