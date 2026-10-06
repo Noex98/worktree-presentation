@@ -3,6 +3,7 @@ import { join } from "node:path"
 import Link from "next/link"
 import { ArrowRightIcon, DownloadSimpleIcon, SparkleIcon, TerminalWindowIcon } from "@phosphor-icons/react/ssr"
 import { CodeBlock } from "@/components/code-block"
+import { CopyButton } from "@/components/copy-button"
 import { PageHeader } from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,6 +13,7 @@ import { cn } from "@/lib/utils"
 // Written from GUIDE.md — keep the two in line.
 
 const agentsTemplate = readFileSync(join(process.cwd(), "public", "AGENTS.md"), "utf8")
+const skill = readFileSync(join(process.cwd(), "public", "skills", "bare-root", "SKILL.md"), "utf8")
 
 function Code({ children }: { children: React.ReactNode }) {
   return <code className="bg-muted px-1.5 py-0.5 font-mono text-[0.85em] normal-case">{children}</code>
@@ -54,7 +56,7 @@ const paths = [
     id: "manual",
     icon: TerminalWindowIcon,
     title: "Manual",
-    description: "Run every command yourself, one at a time.",
+    description: "Run the git commands yourself, one at a time, then let Claude finish the setup.",
   },
 ] as const
 
@@ -92,8 +94,13 @@ function PathPicker({ selected }: { selected: PathId }) {
 }
 
 const skillFiles = [
-  { name: "SKILL.md", href: "/skills/bare-root/SKILL.md", description: "The setup steps Claude follows." },
-  { name: "AGENTS.md", href: "/AGENTS.md", description: "The orchestration file it copies into the root." },
+  { name: "SKILL.md", href: "/skills/bare-root/SKILL.md", content: skill, description: "The setup steps Claude follows." },
+  {
+    name: "AGENTS.md",
+    href: "/AGENTS.md",
+    content: agentsTemplate,
+    description: "The orchestration file it copies into the root.",
+  },
 ]
 
 function SkillSteps() {
@@ -105,11 +112,12 @@ function SkillSteps() {
           so it works in every folder.
         </p>
         <Card>
-          {skillFiles.map(({ name, href, description }) => (
+          {skillFiles.map(({ name, href, content, description }) => (
             <CardHeader key={name}>
               <CardTitle className="font-mono">{name}</CardTitle>
               <CardDescription>{description}</CardDescription>
-              <CardAction>
+              <CardAction className="flex gap-2">
+                <CopyButton text={content} />
                 <Button variant="outline" size="sm" nativeButton={false} render={<a href={href} download />}>
                   <DownloadSimpleIcon data-icon="inline-start" />
                   Download
@@ -166,29 +174,18 @@ function ManualSteps() {
           them across the project folder the way a plain <Code>git clone --bare</Code> does.
         </p>
         <CodeBlock code={"git clone --bare <repo-url> .git"} />
-        <p>A bare clone doesn&apos;t set up fetching of remote branches, so add that and fetch:</p>
-        <div className="space-y-2">
-          <CodeBlock code={'git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"'} />
-          <CodeBlock code={"git fetch origin"} />
-        </div>
       </Step>
 
       <Step number={3} title="Add the orchestration file">
         <p>
-          Download <Code>AGENTS.md</Code> into the root. Then point Claude at it by creating a <Code>CLAUDE.md</Code>{" "}
-          next to it containing just this line:
-        </p>
-        <CodeBlock code={"@AGENTS.md"} />
-        <p>
-          Fill in the Configuration section at the bottom of <Code>AGENTS.md</Code> so it matches your project: the
-          root path, remote, base branch, how a fresh worktree is set up, and how to open a new terminal tab. You can
-          ask Claude in the root to fill it in for you.
+          Download <Code>AGENTS.md</Code> into the root.
         </p>
         <Card>
           <CardHeader>
             <CardTitle className="font-mono">AGENTS.md</CardTitle>
             <CardDescription>The dispatcher instructions for the bare root.</CardDescription>
-            <CardAction>
+            <CardAction className="flex gap-2">
+              <CopyButton text={agentsTemplate} />
               <Button variant="outline" size="sm" nativeButton={false} render={<a href="/AGENTS.md" download />}>
                 <DownloadSimpleIcon data-icon="inline-start" />
                 Download
@@ -203,22 +200,32 @@ function ManualSteps() {
             </ScrollArea>
           </CardContent>
         </Card>
+        <p className="text-base">
+          On an older Claude Code version that doesn&apos;t read <Code>AGENTS.md</Code>, also create a{" "}
+          <Code>CLAUDE.md</Code> next to it containing just <Code>@AGENTS.md</Code>.
+        </p>
       </Step>
 
-      <Step number={4} title="Add the worktrees that always matter">
+      <Step number={4} title="Let Claude finish the setup">
+        <p>Start Claude in the root:</p>
+        <CodeBlock code={"claude"} />
+        <p>And tell it to get going:</p>
+        <CodeBlock code={"Set up this root."} />
         <p>
-          Check out the long-lived branches the project revolves around, like the dev branch, the production branch,
-          or the latest release branch:
+          Its first session follows the First-time setup section at the bottom of <Code>AGENTS.md</Code>. It sets up
+          fetching, which a bare clone leaves out, asks which long-lived branches to check out, like the dev branch, the production branch, or the
+          latest release branch, and adds them under <Code>worktrees/</Code>. Then it fills in the Configuration
+          section, opens a test session to check that spawning works in your terminal, and deletes the First-time
+          setup section.
         </p>
-        <div className="space-y-2">
-          <CodeBlock code={"git worktree add -B development --track worktrees/development origin/development"} />
-          <CodeBlock code={"git worktree add -B main --track worktrees/main origin/main"} />
-        </div>
       </Step>
 
       <Step number={5} title="Start dispatching">
-        <CodeBlock code={"claude"} />
-        <p>Give it a task. It creates a worktree, writes a brief, and opens a new session in that worktree.</p>
+        <p>
+          Give it a task. It creates a worktree, writes a brief, and opens a new session in that worktree. For a first
+          try, pick something small, and tell it not to commit, so you can look at the changes first:
+        </p>
+        <CodeBlock code={"Make the setup steps in the README clearer. Do not commit the changes."} />
       </Step>
     </ol>
   )
@@ -272,12 +279,21 @@ export default async function Setup({ searchParams }: { searchParams: Promise<{ 
   return (
     <>
       <PageHeader
-        title="Set it up"
-        description="One folder that holds the repo and all its worktrees, with Claude working from the root as a dispatcher."
+        title="Bare repo setup"
+        description="One folder that holds the repo and all its worktrees, with an agent working from the root as a dispatcher."
       />
 
       <main className="mx-auto max-w-3xl space-y-20 px-6 pt-12 pb-24">
         <section className="space-y-12">
+          <div className="space-y-3 bg-muted p-6 text-lg">
+            <h2 className="font-heading text-2xl leading-none uppercase">Any harness</h2>
+            <p>
+              This guide sets it up with Claude Code, but any agent harness works. <Code>AGENTS.md</Code> is plain
+              markdown that Claude, Codex, Copilot, OpenCode and others read on their own. With another harness, use the manual path, start it where the guide
+              starts <Code>claude</Code>, and have the <Code>{"{spawn}"}</Code> command open it.
+            </p>
+          </div>
+
           <PathPicker selected={selected} />
           {selected === "skill" ? <SkillSteps /> : <ManualSteps />}
         </section>

@@ -374,6 +374,35 @@ const reasons = [
   },
 ]
 
+// A bare clone into an empty folder: what .git would hold lands straight in the folder, ungrouped, with no
+// files checked out. It's what git servers keep (https://git-scm.com/docs/gitglossary#def_bare_repository). The remote's branches become local branches, and there's no fetch line in the config,
+// which GUIDE.md adds.
+const emptyRoot: Entry = { name: "accelerator", open: true, children: [] }
+
+const bareClone: Command = {
+  cwd: "code/accelerator",
+  run: "git clone --bare git@github.com:example/accelerator.git .",
+  result: {
+    ...emptyRoot,
+    children: [
+      { ...objects, added: true },
+      {
+        name: "refs",
+        added: true,
+        children: [
+          { name: "heads", children: ["development", "main"].map((branch) => ({ name: branch, content: LATEST })) },
+        ],
+      },
+      { name: "HEAD", added: true, content: "ref: refs/heads/main" },
+      {
+        name: "config",
+        added: true,
+        content: ["[core]", "\tbare = true", '[remote "origin"]', "\turl = git@github.com:example/accelerator.git"].join("\n"),
+      },
+    ],
+  },
+}
+
 // My setup, the bare root from GUIDE.md: the repo cloned bare into .git, so the root itself checks
 // nothing out, every worktree is a linked one under worktrees/, and AGENTS.md makes Claude in the root a
 // dispatcher.
@@ -610,9 +639,19 @@ const slides = [
     <FileExplorer root={{ name: "code", open: true, children: [clone()] }} command={claudeWorktree} />
   </Slide>,
 
-  <Slide key="setup" eyebrow="The bare root" title="My setup">
+  <Slide key="bare" eyebrow="The bare root" title="What is a bare repo?">
+    <FileExplorer root={emptyRoot} command={bareClone} text />
+    <p className="max-w-[62cqw] text-[2.4cqw] leading-tight italic">
+      A bare repo is the git data without a worktree.{" "}
+      <Highlight>It&apos;s made for hosting, where nobody works in the files.</Highlight>
+    </p>
+  </Slide>,
+
+  <Slide key="setup" eyebrow="The bare root" title="Bare repo & linked worktrees">
     <FileExplorer root={bareRoot()} command={dispatch} />
   </Slide>,
+
+  <TitleSlide key="demo" title={<Highlight>Demo</Highlight>} subtitle="A bare root from scratch, and seeing it work." />,
 ]
 
 export default async function Slides() {

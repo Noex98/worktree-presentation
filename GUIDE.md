@@ -1,7 +1,13 @@
-# Setup guide
+# Bare repo setup
 
-Set up a project as a bare root: one folder that holds the repo and all its worktrees, with Claude
+Set up a project as a bare root: one folder that holds the repo and all its worktrees, with an agent
 working from the root as a dispatcher.
+
+## Any harness
+
+This guide sets it up with Claude Code, but any agent harness works. `AGENTS.md` is plain markdown
+that Claude, Codex, Copilot, OpenCode and others read on their own. With another harness, use the manual path, start it where the guide starts `claude`, and
+have the `{spawn}` command open it.
 
 Pick one of two paths. The FAQ at the bottom applies to both.
 
@@ -46,7 +52,7 @@ claude
 
 # Manual
 
-Run every command yourself, one at a time.
+Run the git commands yourself, one at a time, then let Claude finish the setup.
 
 ## 1. Make the project folder
 
@@ -67,49 +73,41 @@ across the project folder the way a plain `git clone --bare` does.
 git clone --bare <repo-url> .git
 ```
 
-A bare clone doesn't set up fetching of remote branches, so add that and fetch:
-
-```sh
-git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-```
-
-```sh
-git fetch origin
-```
-
 ## 3. Add the orchestration file
 
-Download [`AGENTS.md`](/AGENTS.md) into the root. Then point Claude at it by creating a
-`CLAUDE.md` next to it containing just this line:
+Download [`AGENTS.md`](/AGENTS.md) into the root.
 
-```
-@AGENTS.md
-```
+On an older Claude Code version that doesn't read `AGENTS.md`, also create a `CLAUDE.md` next to it
+containing just `@AGENTS.md`.
 
-Fill in the Configuration section at the bottom of `AGENTS.md` so it matches your project:
-the root path, remote, base branch, how a fresh worktree is set up, and how to open a new
-terminal tab. You can ask Claude in the root to fill it in for you.
+## 4. Let Claude finish the setup
 
-## 4. Add the worktrees that always matter
-
-Check out the long-lived branches the project revolves around, like the dev branch, the
-production branch, or the latest release branch:
-
-```sh
-git worktree add -B development --track worktrees/development origin/development
-```
-
-```sh
-git worktree add -B main --track worktrees/main origin/main
-```
-
-## 5. Start dispatching
+Start Claude in the root:
 
 ```sh
 claude
 ```
 
-Give it a task. It creates a worktree, writes a brief, and opens a new session in that worktree.
+And tell it to get going:
+
+```
+Set up this root.
+```
+
+Its first session follows the First-time setup section at the bottom of `AGENTS.md`. It sets up
+fetching, which a bare clone leaves out, asks which long-lived branches to check out, like the dev branch, the production branch, or
+the latest release branch, and adds them under `worktrees/`. Then it fills in the Configuration
+section, opens a test session to check that spawning works in your terminal, and deletes the
+First-time setup section.
+
+## 5. Start dispatching
+
+Give it a task. It creates a worktree, writes a brief, and opens a new session in that worktree. For
+a first try, pick something small, and tell it not to commit, so you can look at the changes first:
+
+```
+Make the setup steps in the README clearer. Do not commit the changes.
+```
 
 # FAQ
 

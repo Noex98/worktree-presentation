@@ -40,7 +40,16 @@ export type Command = { cwd: string; run: string; cycle?: string[]; result: Entr
 export type Help = { summary: string; items: { label: string; text: string; code?: string }[] }
 
 // A file explorer for slides: a tree on the left, where folders open and close and files open on the right.
-export function FileExplorer({ root: initial, command }: { root: Entry; command?: Command }) {
+// `text` says the slide has text under the explorer, which slides with a command usually don't.
+export function FileExplorer({
+  root: initial,
+  command,
+  text = !command,
+}: {
+  root: Entry
+  command?: Command
+  text?: boolean
+}) {
   const [ran, setRan] = useState(false)
   const [helping, setHelping] = useState(false)
   const [reading, setReading] = useState(false)
@@ -148,11 +157,11 @@ export function FileExplorer({ root: initial, command }: { root: Entry; command?
             )}
           </div>
         )}
-        {/* Slides with a command have no text under the explorer, so it takes that space too. */}
+        {/* Without text under it, the explorer takes that space too; the command bar takes some of it. */}
         <div
           className={cn(
             "grid grid-cols-[38cqw_1fr] grid-rows-[minmax(0,1fr)] border-[0.15cqw] border-foreground",
-            command ? "h-[33cqw]" : "h-[27cqw]",
+            !text ? "h-[33cqw]" : command ? "h-[23cqw]" : "h-[27cqw]",
           )}
         >
           <ul className="overflow-y-scroll border-r-[0.15cqw] border-foreground py-[0.6cqw]">{rows(root, root.name, 0)}</ul>

@@ -94,6 +94,16 @@ Notes: backed up by the git docs and others
 
 ## The bare root
 
-- **My setup**: the bare root from the setup guide. The repo is cloned bare into `.git`, the
+- **What a bare repo is**: make an empty `accelerator` dir and run `git clone --bare <repo-url> .`
+  in it. What `.git` would hold lands straight in the dir, ungrouped, with `bare = true` in its
+  config and no files checked out. A bare repo is the git data without a worktree, made for hosting,
+  where nobody works in the files
+  ([gitglossary](https://git-scm.com/docs/gitglossary#def_bare_repository),
+  [Pro Git](https://git-scm.com/book/en/v2/Git-on-the-Server-Getting-Git-on-a-Server))
+- **Bare repo & linked worktrees**: the bare root from the setup guide. The repo is cloned bare into `.git`, the
   long-lived branches are checked out under `worktrees/`, and `AGENTS.md` and `CLAUDE.md` sit in the
   root
+
+## Demo
+
+- **A cue to switch to the terminal**: I set up a bare root from scratch and show it working
