@@ -5,6 +5,22 @@ import Image from "next/image"
 import { XIcon } from "@phosphor-icons/react/ssr"
 import { cn } from "@/lib/utils"
 
+// An image that fits its panel, and on click zooms in to twice the panel's width, scrolling inside it.
+export function ZoomImage({ src, alt, width, height }: { src: string; alt: string; width: number; height: number }) {
+  const [zoomed, setZoomed] = useState(false)
+
+  return (
+    <button
+      type="button"
+      aria-label={zoomed ? "Zoom out" : "Zoom in"}
+      onClick={() => setZoomed(!zoomed)}
+      className={cn("block outline-none", zoomed ? "w-[200%] cursor-zoom-out" : "size-full cursor-zoom-in")}
+    >
+      <Image src={src} alt={alt} width={width} height={height} unoptimized className={zoomed ? "w-full" : "size-full object-contain"} />
+    </button>
+  )
+}
+
 // A guest's face in a slide's corner, opening what they're showing in a modal, one tab per thing.
 export function Guest({ name, face, tabs }: { name: string; face: string; tabs: { label: string; content: React.ReactNode }[] }) {
   const dialog = useRef<HTMLDialogElement>(null)

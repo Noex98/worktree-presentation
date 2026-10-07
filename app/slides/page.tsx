@@ -1,12 +1,11 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { Fragment } from "react"
-import Image from "next/image"
 import { notFound } from "next/navigation"
 import { Highlight } from "@/components/highlight"
 import { Deck } from "@/components/slides/deck"
 import { type Command, type Entry, FileExplorer } from "@/components/slides/file-explorer"
-import { Guest } from "@/components/slides/guest"
+import { Guest, ZoomImage } from "@/components/slides/guest"
 import { Markdown } from "@/components/slides/markdown"
 import { Slide, TitleSlide } from "@/components/slides/slide"
 import { showSlides } from "@/flags"
@@ -666,12 +665,11 @@ const slides = [
           {
             label: "Diagram",
             content: (
-              <Image
+              <ZoomImage
                 src="/parallel-agents.png"
                 alt="Parallel agent development with Claude: an orchestrator spawns a refiner and an implementer per task, with a human review at every gate"
                 width={2000}
                 height={1280}
-                className="size-full object-contain"
               />
             ),
           },
