@@ -1,14 +1,12 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { Fragment } from "react"
-import { notFound } from "next/navigation"
 import { Highlight } from "@/components/highlight"
 import { Deck } from "@/components/slides/deck"
 import { type Command, type Entry, FileExplorer } from "@/components/slides/file-explorer"
 import { Guest, ZoomImage } from "@/components/slides/guest"
 import { Markdown } from "@/components/slides/markdown"
 import { Slide, TitleSlide } from "@/components/slides/slide"
-import { showSlides } from "@/flags"
 import { cn } from "@/lib/utils"
 
 // Written from SLIDES.md — keep the two in line.
@@ -687,8 +685,6 @@ const slides = [
   />,
 ]
 
-export default async function Slides() {
-  if (!(await showSlides())) notFound()
-
+export default function Slides() {
   return <Deck slides={slides} />
 }

@@ -2,22 +2,19 @@ import Link from "next/link"
 import { ArrowRightIcon } from "@phosphor-icons/react/ssr"
 import { Highlight } from "@/components/highlight"
 import { ImpactLogo } from "@/components/impact-logo"
-import { showSlides } from "@/flags"
 import { cn } from "@/lib/utils"
 
-export default async function Home() {
+export default function Home() {
   const links = [
     {
       href: "/slides",
       title: "Slides",
       description: "Go through the presentation.",
-      enabled: await showSlides(),
     },
     {
       href: "/setup",
       title: "Bare repo setup",
       description: "With a user-scoped skill or by hand, plus an FAQ for the snags.",
-      enabled: true,
     },
   ]
 
@@ -45,50 +42,33 @@ export default async function Home() {
           </p>
 
           <ol className="-mx-4 border-t">
-            {links.map(({ href, title, description, enabled }, i) => {
-              const text = (
-                <span className="space-y-2 2xl:space-y-3">
-                  <span className="block font-heading text-4xl leading-none uppercase sm:text-5xl 2xl:text-6xl min-[2400px]:text-8xl">
-                    {title}
-                  </span>
-                  <span className="block text-lg 2xl:text-2xl min-[2400px]:text-3xl">{description}</span>
-                </span>
-              )
-
-              return (
-                <li key={href} className="border-b">
-                  {enabled ? (
-                    <Link
-                      href={href}
-                      className={cn(
-                        row,
-                        "group outline-none transition-colors hover:bg-foreground hover:text-background focus-visible:bg-foreground focus-visible:text-background",
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          number,
-                          "text-muted-foreground transition-colors group-hover:text-impact-yellow group-focus-visible:text-impact-yellow",
-                        )}
-                      >
-                        0{i + 1}
-                      </span>
-                      {text}
-                      <ArrowRightIcon className="size-8 transition group-hover:translate-x-1 group-hover:text-impact-yellow group-focus-visible:text-impact-yellow 2xl:size-10 min-[2400px]:size-14" />
-                    </Link>
-                  ) : (
-                    <div aria-disabled className={cn(row, "text-muted-foreground")}>
-                      <span className={number}>0{i + 1}</span>
-                      {text}
-                      {/* Under the text on phones, where it would squeeze it; in the arrow's place from sm up. */}
-                      <span className="col-start-2 mt-3 font-heading text-sm tracking-wide uppercase sm:col-start-3 sm:row-start-1 sm:mt-0 2xl:text-base min-[2400px]:text-xl">
-                        Available after the presentation
-                      </span>
-                    </div>
+            {links.map(({ href, title, description }, i) => (
+              <li key={href} className="border-b">
+                <Link
+                  href={href}
+                  className={cn(
+                    row,
+                    "group outline-none transition-colors hover:bg-foreground hover:text-background focus-visible:bg-foreground focus-visible:text-background",
                   )}
-                </li>
-              )
-            })}
+                >
+                  <span
+                    className={cn(
+                      number,
+                      "text-muted-foreground transition-colors group-hover:text-impact-yellow group-focus-visible:text-impact-yellow",
+                    )}
+                  >
+                    0{i + 1}
+                  </span>
+                  <span className="space-y-2 2xl:space-y-3">
+                    <span className="block font-heading text-4xl leading-none uppercase sm:text-5xl 2xl:text-6xl min-[2400px]:text-8xl">
+                      {title}
+                    </span>
+                    <span className="block text-lg 2xl:text-2xl min-[2400px]:text-3xl">{description}</span>
+                  </span>
+                  <ArrowRightIcon className="size-8 transition group-hover:translate-x-1 group-hover:text-impact-yellow group-focus-visible:text-impact-yellow 2xl:size-10 min-[2400px]:size-14" />
+                </Link>
+              </li>
+            ))}
           </ol>
         </div>
       </div>
