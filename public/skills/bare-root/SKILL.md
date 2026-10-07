@@ -67,7 +67,6 @@ Then fill in the Configuration section of the root's `AGENTS.md`:
 - `{finish}`: keep the default unless the user says otherwise.
 - `{spawn}`: pick the command for the user's terminal from the First-time setup section, asking
   which terminal they use if you can't tell, then test it the way that section describes.
-- Delete the Multi-remote setup section; this root has one remote.
 - Delete the First-time setup section; this skill has done it.
 
 ## 5. Git hooks

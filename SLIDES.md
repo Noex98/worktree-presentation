@@ -107,3 +107,5 @@ Notes: backed up by the git docs and others
 ## Demo
 
 - **A cue to switch to the terminal**: I set up a bare root from scratch and show it working
+- **Rune's diagram**: his face in the top-right corner opens his diagram of parallel agent development
+  with Claude, and his AGENTS.md in a second tab

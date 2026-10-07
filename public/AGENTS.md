@@ -35,22 +35,6 @@ the brief from `<brief-file>`, or takes it inline as `<brief>`:
 
     <e.g. wt -w 0 nt -d <dir> claude '<brief>'>
 
-## Multi-remote setup
-
-Optional. Only when this root tracks more than one remote — with a single remote, delete this
-section. It adjusts how tasks are dispatched:
-
-- Worktrees go one level deeper, per remote: `worktrees/{remote}/<dir>` for the main remote,
-  `worktrees/<p>/<dir>` for each extra one.
-- Branches on an extra remote are prefixed `<p>/` (never the remote name). The directory drops that
-  prefix.
-- Fetch and branch from that row's remote and base branch.
-- PRs name the repo: `gh pr create -R <repo>` — `gh` otherwise defaults to `{remote}`.
-
-| Prefix `<p>` | Remote | GitHub repo (`gh -R`) | Base branch |
-|--------------|--------|-----------------------|-------------|
-|              |        |                       |             |
-
 ---
 # Dispatching a task
 
@@ -153,7 +137,6 @@ than asking in plain text. Ask everything you can't work out in one go, then don
            directory = "<dir>"
            commands = ["claude \"$(cat <brief-file>)\""]
 
-   - With a single remote, delete the Multi-remote setup section.
 5. **Test `{spawn}`**: it's the step most likely to break, so try it before calling the setup done.
    Write a test brief with the characters that tend to break a command line (leave out `'` and `;`
    if `{spawn}` takes the brief inline):

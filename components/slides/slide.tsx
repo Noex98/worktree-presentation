@@ -17,16 +17,27 @@ function Logo() {
   )
 }
 
-export function TitleSlide({ title, subtitle }: { title: React.ReactNode; subtitle?: React.ReactNode }) {
+export function TitleSlide({
+  title,
+  subtitle,
+  corner,
+}: {
+  title: React.ReactNode
+  subtitle?: React.ReactNode
+  corner?: React.ReactNode
+}) {
   return (
     <section className="dark flex size-full flex-col bg-background p-[3cqw] text-foreground">
-      <Link
-        href="/"
-        aria-label="Back to the front page"
-        className="flex size-[2.4cqw] items-center justify-center self-start text-muted-foreground outline-none transition-colors hover:text-highlight focus-visible:text-highlight"
-      >
-        <ArrowLeftIcon className="size-[1.8cqw]" />
-      </Link>
+      <div className="flex items-start justify-between">
+        <Link
+          href="/"
+          aria-label="Back to the front page"
+          className="flex size-[2.4cqw] items-center justify-center text-muted-foreground outline-none transition-colors hover:text-highlight focus-visible:text-highlight"
+        >
+          <ArrowLeftIcon className="size-[1.8cqw]" />
+        </Link>
+        {corner}
+      </div>
       <div className="mt-auto space-y-[1.6cqw]">
         <h1 className="font-heading text-[6.25cqw] leading-[0.9] uppercase">{title}</h1>
         {subtitle && <p className="max-w-[48cqw] text-[2.4cqw] leading-tight italic">{subtitle}</p>}

@@ -1,10 +1,13 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { Fragment } from "react"
+import Image from "next/image"
 import { notFound } from "next/navigation"
 import { Highlight } from "@/components/highlight"
 import { Deck } from "@/components/slides/deck"
 import { type Command, type Entry, FileExplorer } from "@/components/slides/file-explorer"
+import { Guest } from "@/components/slides/guest"
+import { Markdown } from "@/components/slides/markdown"
 import { Slide, TitleSlide } from "@/components/slides/slide"
 import { showSlides } from "@/flags"
 import { cn } from "@/lib/utils"
@@ -651,7 +654,39 @@ const slides = [
     <FileExplorer root={bareRoot()} command={dispatch} />
   </Slide>,
 
-  <TitleSlide key="demo" title={<Highlight>Demo</Highlight>} subtitle="A bare root from scratch, and seeing it work." />,
+  <TitleSlide
+    key="demo"
+    title={<Highlight>Demo</Highlight>}
+    subtitle="A bare root from scratch, and seeing it work."
+    corner={
+      <Guest
+        name="Rune"
+        face="/rune.png"
+        tabs={[
+          {
+            label: "Diagram",
+            content: (
+              <Image
+                src="/parallel-agents.png"
+                alt="Parallel agent development with Claude: an orchestrator spawns a refiner and an implementer per task, with a human review at every gate"
+                width={2000}
+                height={1280}
+                className="size-full object-contain"
+              />
+            ),
+          },
+          {
+            label: "AGENTS.md",
+            content: (
+              <div className="mx-auto max-w-[70cqw] p-[3cqw]">
+                <Markdown content={readFileSync(join(process.cwd(), "public/rune-AGENTS.md"), "utf8")} />
+              </div>
+            ),
+          },
+        ]}
+      />
+    }
+  />,
 ]
 
 export default async function Slides() {
